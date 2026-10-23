@@ -38,6 +38,7 @@ public:
     int getRequiereCirugia() const;
     int getDiasHospitalizacion() const;
     std::string getServicioAsignado() const;
+    std::string getServicioDestino() const;
 
     void setServicioAsignado(const std::string& servicio);
 

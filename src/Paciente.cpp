@@ -73,6 +73,10 @@ std::string Paciente::getServicioAsignado() const {
     return servicioAsignado;
 }
 
+std::string Paciente::getServicioDestino() const {
+    return servicioAsignado;
+}
+
 void Paciente::setServicioAsignado(const std::string& servicio) {
     servicioAsignado = servicio;
 }
