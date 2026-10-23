@@ -1,5 +1,8 @@
-001;Juan Perez;25;Cardiologia
-002;Maria Soto;67;Urgencias
-003;Pedro Rojas;43;Cirugia
-004;Ana Torres;12;Pediatria
-005;Luis Diaz;31;Traumatologia
+001;Juan Perez;25;37.0;120;3;otro;0;0;0;0
+002;Maria Soto;67;39.0;140;9;cabeza;0;0;0;0
+003;Pedro Rojas;43;36.5;130;7;extremidad;1;0;1;0
+004;Ana Torres;12;36.8;110;2;otro;0;0;0;0
+005;Luis Diaz;31;37.2;125;6;extremidad;1;0;0;0
+006;Carlos Vega;55;36.9;135;8;pecho;0;0;0;0
+007;Elena Mora;48;37.1;120;4;cabeza;0;1;0;0
+008;Sofia Rivas;35;36.6;115;2;otro;0;0;0;4

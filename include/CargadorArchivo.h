@@ -9,7 +9,8 @@ public:
     static bool cargarPacientes(const std::string& rutaArchivo, ColaPacientes& cola);
 
 private:
-    // Divide "ID;Nombre;Edad;Servicio" usando aritmetica de punteros.
-    static bool parsearLinea(const std::string& linea, std::string campos[4]);
-    static bool esEdadValida(const std::string& texto);
+    // Divide la linea usando aritmetica de punteros.
+    static bool parsearLinea(const std::string& linea, std::string campos[11]);
+    static bool esEnteroValido(const std::string& texto);
+    static bool esDecimalValido(const std::string& texto);
 };
