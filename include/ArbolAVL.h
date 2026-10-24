@@ -19,17 +19,41 @@ private:
     // Insercion recursiva con balanceo
     NodoAVL* insertarAux(NodoAVL* nodo, Paciente* paciente);
 
-    // Destruccion recursiva de nodos
+    // Eliminacion recursiva con balanceo
+    NodoAVL* eliminarAux(NodoAVL* nodo, const std::string& id, bool& eliminado);
+    NodoAVL* obtenerNodoConValorMinimo(NodoAVL* nodo) const;
+
+    // Busquedas auxiliares
+    Paciente* buscarPorIdAux(NodoAVL* nodo, const std::string& id, std::string& ruta) const;
+    Paciente* buscarPorNombreAux(NodoAVL* nodo, const std::string& nombre) const;
+
+    // Recorridos auxiliares
+    void inordenAux(NodoAVL* nodo) const;
+    void preordenAux(NodoAVL* nodo) const;
+    void postordenAux(NodoAVL* nodo) const;
+
+    // Destruccion recursiva
     void destruirArbol(NodoAVL* nodo);
 
 public:
     ArbolAVL();
     ~ArbolAVL();
 
-    // Inserta un nuevo paciente manteniendo el balance
+    // Insercion
     void insertar(Paciente* paciente);
+    // Eliminacion
+    bool eliminarPorId(const std::string& id);
 
-    // Retorna la altura total del arbol
+    // Metodos de busqueda
+    Paciente* buscarPorId(const std::string& id, std::string& ruta) const;
+    Paciente* buscarPorNombre(const std::string& nombre) const;
+
+    // Recorridos 
+    void mostrarInorden() const;
+    void mostrarPreorden() const;
+    void mostrarPostorden() const;
+
+    // Estado del arbol
     int getAlturaArbol() const;
 
     // Retorna el factor de balance de la raiz
