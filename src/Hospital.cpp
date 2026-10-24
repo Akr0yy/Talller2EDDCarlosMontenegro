@@ -2,7 +2,7 @@
 #include <iostream>
 
 Hospital::Hospital() : inicio(nullptr) {
-    // Los 8 servicios fijos del enunciado, en orden.
+    // Los 8 servicios fijos del hospital, en orden
     agregarServicio("Urgencias");
     agregarServicio("Medicina General");
     agregarServicio("Cardiologia");
@@ -18,7 +18,7 @@ Hospital::~Hospital() {
     while (actual != nullptr) {
         NodoServicio* temp = actual;
         actual = actual->siguiente;
-        delete temp->dato; // libera el Servicio (que libera sus pacientes)
+        delete temp->dato; // libera el Servicio (el cual libera su arbol AVL interno)
         delete temp;
     }
 }
@@ -51,9 +51,36 @@ Servicio* Hospital::buscarServicio(const std::string& nombre) const {
     throw std::string("Servicio no valido: '" + nombre + "'.");
 }
 
-void Hospital::recibirPaciente(Paciente* paciente) {
-    Servicio* servicio = buscarServicio(paciente->getServicioDestino());
+std::string Hospital::procesarYDerivarPaciente(Paciente* paciente, std::string& rutaDecision) {
+    if (!paciente) return "";
+
+    // 1. Evaluar con el arbol de decision
+    std::string servicioAsignado = arbolDecision.evaluar(paciente, rutaDecision);
+    paciente->setServicioAsignado(servicioAsignado);
+
+    // 2. Insertar en el AVL del servicio correspondiente
+    Servicio* servicio = buscarServicio(servicioAsignado);
     servicio->agregarPaciente(paciente);
+
+    return servicioAsignado;
+}
+
+void Hospital::mostrarServicios() const {
+    NodoServicio* actual = inicio;
+    int contador = 1;
+    while (actual != nullptr) {
+        std::cout << contador << ". " << actual->dato->getNombre() << std::endl;
+        actual = actual->siguiente;
+        contador++;
+    }
+}
+
+void Hospital::mostrarEstadoDepartamentos() const {
+    NodoServicio* actual = inicio;
+    while (actual != nullptr) {
+        actual->dato->mostrarPacientes();
+        actual = actual->siguiente;
+    }
 }
 
 Servicio* Hospital::obtenerPorIndice(int indice) const {
@@ -74,24 +101,39 @@ Servicio* Hospital::obtenerPorIndice(int indice) const {
     throw std::string("Opcion invalida.");
 }
 
-void Hospital::mostrarServicios() const {
-    NodoServicio* actual = inicio;
-    int contador = 1;
-    while (actual != nullptr) {
-        std::cout << contador << ". " << actual->dato->getNombre() << std::endl;
-        actual = actual->siguiente;
-        contador++;
-    }
-}
-
-Paciente* Hospital::buscarPacientePorId(const std::string& id) const {
+Paciente* Hospital::buscarPacientePorId(const std::string& id, std::string& departamento, std::string& ruta) const {
     NodoServicio* actual = inicio;
     while (actual != nullptr) {
-        Paciente* encontrado = actual->dato->buscarPaciente(id);
+        ruta = "";
+        Paciente* encontrado = actual->dato->buscarPacientePorId(id, ruta);
         if (encontrado != nullptr) {
+            departamento = actual->dato->getNombre();
             return encontrado;
         }
         actual = actual->siguiente;
     }
     return nullptr;
+}
+
+Paciente* Hospital::buscarPacientePorNombre(const std::string& nombre, std::string& departamento) const {
+    NodoServicio* actual = inicio;
+    while (actual != nullptr) {
+        Paciente* encontrado = actual->dato->buscarPacientePorNombre(nombre);
+        if (encontrado != nullptr) {
+            departamento = actual->dato->getNombre();
+            return encontrado;
+        }
+        actual = actual->siguiente;
+    }
+    return nullptr;
+}
+
+void Hospital::mostrarRecorridosArbolDecision() const {
+    std::cout << "--- Recorridos Arbol de Decision ---" << std::endl;
+    std::cout << "Preorden: ";
+    arbolDecision.mostrarPreorden();
+    std::cout << "Inorden: ";
+    arbolDecision.mostrarInorden();
+    std::cout << "Postorden: ";
+    arbolDecision.mostrarPostorden();
 }

@@ -2,17 +2,9 @@
 #include <iostream>
 
 Servicio::Servicio(const std::string& nombre)
-    : nombre(nombre), inicio(nullptr), final(nullptr), cantidad(0) {}
+    : nombre(nombre), cantidad(0) {}
 
-Servicio::~Servicio() {
-    NodoPacienteServicio* actual = inicio;
-    while (actual != nullptr) {
-        NodoPacienteServicio* temp = actual;
-        actual = actual->siguiente;
-        delete temp->dato; // el servicio es el dueño final del paciente
-        delete temp;
-    }
-}
+Servicio::~Servicio() {}
 
 std::string Servicio::getNombre() const {
     return nombre;
@@ -23,37 +15,49 @@ int Servicio::getCantidad() const {
 }
 
 void Servicio::agregarPaciente(Paciente* paciente) {
-    NodoPacienteServicio* nuevo = new NodoPacienteServicio(paciente);
-
-    if (final == nullptr) {
-        inicio = nuevo;
-        final = nuevo;
-    } else {
-        final->siguiente = nuevo;
-        final = nuevo;
+    if (paciente != nullptr) {
+        pacientesAVL.insertar(paciente);
+        cantidad++;
     }
-    cantidad++;
 }
 
-Paciente* Servicio::buscarPaciente(const std::string& id) const {
-    NodoPacienteServicio* actual = inicio;
-    while (actual != nullptr) {
-        if (actual->dato->getId() == id) {
-            return actual->dato;
-        }
-        actual = actual->siguiente;
+Paciente* Servicio::buscarPacientePorId(const std::string& id, std::string& ruta) const {
+    return pacientesAVL.buscarPorId(id, ruta);
+}
+
+Paciente* Servicio::buscarPacientePorNombre(const std::string& nombre) const {
+    return pacientesAVL.buscarPorNombre(nombre);
+}
+
+bool Servicio::eliminarPacientePorId(const std::string& id) {
+    bool eliminado = pacientesAVL.eliminarPorId(id);
+    if (eliminado) {
+        cantidad--;
     }
-    return nullptr;
+    return eliminado;
 }
 
 void Servicio::mostrarPacientes() const {
-    std::cout << "Pacientes en el departamento de " << nombre << ": "
-              << cantidad << std::endl;
+    std::cout << nombre << "\n";
+    pacientesAVL.mostrarInorden();
+}
 
-    NodoPacienteServicio* actual = inicio;
-    while (actual != nullptr) {
-        std::cout << actual->dato->getNombre() << " ("
-                  << actual->dato->getEdad() << ")" << std::endl;
-        actual = actual->siguiente;
-    }
+void Servicio::mostrarRecorridos() const {
+    std::cout << "--- Recorridos AVL: " << nombre << " ---" << std::endl;
+    std::cout << "Inorden: ";
+    pacientesAVL.mostrarInorden();
+    std::cout << "Preorden: ";
+    pacientesAVL.mostrarPreorden();
+    std::cout << "Postorden: ";
+    pacientesAVL.mostrarPostorden();
+    std::cout << "Altura: " << pacientesAVL.getAlturaArbol() 
+              << " | Factor Balance Raiz: " << pacientesAVL.getBalanceRaiz() << std::endl;
+}
+
+int Servicio::getAlturaAVL() const {
+    return pacientesAVL.getAlturaArbol();
+}
+
+int Servicio::getBalanceAVL() const {
+    return pacientesAVL.getBalanceRaiz();
 }

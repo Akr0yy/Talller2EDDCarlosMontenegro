@@ -1,38 +1,33 @@
 #pragma once
 #include "NodoServicio.h"
+#include "ArbolDecision.h"
 #include <string>
 
-// Lista enlazada principal del hospital: una secuencia de Servicios
-// fijos. Se crea una sola vez al iniciar el programa.
+// Lista enlazada principal del hospital con sus servicios y arbol de clasificacion
 class Hospital {
 private:
     NodoServicio* inicio;
+    ArbolDecision arbolDecision;
 
-    // Agrega un servicio nuevo al final de la lista (uso interno,
-    // solo durante la construccion del hospital).
     void agregarServicio(const std::string& nombre);
 
 public:
     Hospital();
-    ~Hospital(); //libera todos los Servicio y sus pacientes
+    ~Hospital(); // Libera todos los Servicios y sus respectivos arboles AVL
 
-    // Busca un servicio por nombre. Lanza una excepcion si el nombre 
-    //no corresponde a ninguno de los servicios validos.
     Servicio* buscarServicio(const std::string& nombre) const;
 
-    // Recibe un paciente y lo deriva al servicio indicado en
-    // paciente->getServicioDestino(). Lanza excepcion si el servicio
-    //no es valido.
-    void recibirPaciente(Paciente* paciente);
+    // Evalua al paciente con el Arbol de Decision y lo inserta en el AVL correspondiente
+    std::string procesarYDerivarPaciente(Paciente* paciente, std::string& rutaDecision);
 
     void mostrarServicios() const;
-
-    // Retorna el servicio ubicado en la posicion 'indice' (1-based,
-    // tal como se numera en el menu). Lanza excepcion si esta fuera
-    // de rango.
+    void mostrarEstadoDepartamentos() const;
     Servicio* obtenerPorIndice(int indice) const;
 
-    // Busca un paciente por id recorriendo todos los servicios.
-    // Retorna nullptr si no se encuentra en ninguno.
-    Paciente* buscarPacientePorId(const std::string& id) const;
+    // Busqueda de paciente en todos los arboles AVL
+    Paciente* buscarPacientePorId(const std::string& id, std::string& departamento, std::string& ruta) const;
+    Paciente* buscarPacientePorNombre(const std::string& nombre, std::string& departamento) const;
+
+    // Recorridos del Arbol de Decision
+    void mostrarRecorridosArbolDecision() const;
 };
