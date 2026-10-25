@@ -4,7 +4,7 @@
 015;Elena Morales;55;36.5;130;3;cabeza;0;1;0;0
 002;Lucia Valenzuela;8;37.2;100;2;abdomen;0;0;0;0
 008;Fernando Torres;62;37.0;145;6;pecho;0;0;0;0
-025;Andrea Castro;40;37.1;115;4;espalda;0;0;0;4
+025;Andrea Castro;40;37.1;115;4;otro;0;0;0;4
 018;Diego Ramirez;31;36.6;118;2;otro;0;0;0;0
 012;Beatriz Soto;7;36.9;95;1;otro;0;0;0;0
 001;Tomas Munoz;5;37.0;105;3;otro;0;0;0;0
