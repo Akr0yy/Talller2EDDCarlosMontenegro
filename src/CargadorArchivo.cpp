@@ -169,6 +169,18 @@ bool CargadorArchivo::cargarPacientes(const std::string& rutaArchivo, ColaPacien
             continue;
         }
 
+        if (presion < 40 || presion > 260) {
+            std::cerr << "Linea " << numeroLinea << " invalida (presion arterial fuera de rango fisiologico [40-260]): " << linea << std::endl;
+            rechazados++;
+            continue;
+        }
+
+        if (diasHosp < 0 || diasHosp > 365) {
+            std::cerr << "Linea " << numeroLinea << " invalida (dias de hospitalizacion fuera de rango [0-365]): " << linea << std::endl;
+            rechazados++;
+            continue;
+        }
+
         // Verificacion de duplicado en cola
         if (cola.existeId(id)) {
             std::cerr << "Linea " << numeroLinea << ": paciente duplicado, id " << id << " ya existe." << std::endl;
