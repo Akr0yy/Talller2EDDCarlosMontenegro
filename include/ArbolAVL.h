@@ -48,7 +48,6 @@ public:
     Paciente* buscarPorId(const std::string& id, std::string& ruta) const;
     Paciente* buscarPorNombre(const std::string& nombre) const;
 
-    // Recorridos 
     void mostrarInorden() const;
     void mostrarPreorden() const;
     void mostrarPostorden() const;
