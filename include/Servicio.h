@@ -32,6 +32,8 @@ public:
     // Muestra los pacientes en formato inorden
     void mostrarPacientes() const;
 
+    void mostrarRecorridosCompletos() const;
+
     // Consultas de la estructura AVL
     void mostrarRecorridos() const;
     int getAlturaAVL() const;

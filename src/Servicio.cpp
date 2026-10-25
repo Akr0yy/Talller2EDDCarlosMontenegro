@@ -54,6 +54,17 @@ void Servicio::mostrarRecorridos() const {
               << " | Factor Balance Raiz: " << pacientesAVL.getBalanceRaiz() << std::endl;
 }
 
+void Servicio::mostrarRecorridosCompletos() const {
+    std::cout << "\nRecorrido Inorden (por ID):";
+    pacientesAVL.mostrarInorden();
+
+    std::cout << "\nRecorrido Preorden:";
+    pacientesAVL.mostrarPreorden();
+
+    std::cout << "\nRecorrido Postorden:";
+    pacientesAVL.mostrarPostorden();
+}
+
 int Servicio::getAlturaAVL() const {
     return pacientesAVL.getAlturaArbol();
 }

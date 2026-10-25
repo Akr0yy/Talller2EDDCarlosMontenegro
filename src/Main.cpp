@@ -96,10 +96,16 @@ void verDepartamento(Hospital& hospital) {
         for (char& c : nombreMayus) c = toupper(c);
 
         std::cout << "\n=== ESTADO " << nombreMayus << " ===" << std::endl;
-        servicio->mostrarPacientes();
         std::cout << "Total de pacientes: " << servicio->getCantidad() << std::endl;
-        std::cout << "Altura arbol AVL: " << servicio->getAlturaAVL() << std::endl;
+        std::cout << "Altura global del arbol: " << servicio->getAlturaAVL() << std::endl;
         std::cout << "Factor de balance raiz: " << servicio->getBalanceAVL() << std::endl;
+
+        if (servicio->getCantidad() > 0) {
+            std::cout << "\n--- RECORRIDOS DEL ARBOL AVL (con altura y balance por nodo) ---";
+            servicio->mostrarRecorridosCompletos();
+        } else {
+            std::cout << "Sin pacientes internados actualmente." << std::endl;
+        }
     } catch (const std::string& mensaje) {
         std::cout << mensaje << std::endl;
     }

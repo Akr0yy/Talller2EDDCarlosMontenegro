@@ -271,14 +271,20 @@ Paciente* ArbolAVL::buscarPorNombre(const std::string& nombre) const {
 void ArbolAVL::inordenAux(NodoAVL* nodo) const {
     if (nodo != nullptr) {
         inordenAux(nodo->getIzquierdo());
-        std::cout << nodo->getPaciente()->getNombre() << " (" << nodo->getPaciente()->getId() << ") ";
+        std::cout << "\n   - [" << nodo->getPaciente()->getId() << "] " 
+                  << nodo->getPaciente()->getNombre()
+                  << " (h: " << nodo->getAltura() 
+                  << ", fb: " << obtenerBalance(nodo) << ")";
         inordenAux(nodo->getDerecho());
     }
 }
 
 void ArbolAVL::preordenAux(NodoAVL* nodo) const {
     if (nodo != nullptr) {
-        std::cout << nodo->getPaciente()->getNombre() << " (" << nodo->getPaciente()->getId() << ") ";
+        std::cout << "\n   - [" << nodo->getPaciente()->getId() << "] " 
+                  << nodo->getPaciente()->getNombre()
+                  << " (h: " << nodo->getAltura() 
+                  << ", fb: " << obtenerBalance(nodo) << ")";
         preordenAux(nodo->getIzquierdo());
         preordenAux(nodo->getDerecho());
     }
@@ -288,7 +294,10 @@ void ArbolAVL::postordenAux(NodoAVL* nodo) const {
     if (nodo != nullptr) {
         postordenAux(nodo->getIzquierdo());
         postordenAux(nodo->getDerecho());
-        std::cout << nodo->getPaciente()->getNombre() << " (" << nodo->getPaciente()->getId() << ") ";
+        std::cout << "\n   - [" << nodo->getPaciente()->getId() << "] " 
+                  << nodo->getPaciente()->getNombre()
+                  << " (h: " << nodo->getAltura() 
+                  << ", fb: " << obtenerBalance(nodo) << ")";
     }
 }
 
