@@ -30,4 +30,7 @@ public:
 
     // Recorridos del Arbol de Decision
     void mostrarRecorridosArbolDecision() const;
+
+    // Da de alta (elimina) un paciente por ID de los arboles AVL del hospital
+    bool darDeAltaPaciente(const std::string& id, std::string& departamento);
 };

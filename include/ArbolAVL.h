@@ -12,14 +12,16 @@ private:
     int obtenerBalance(NodoAVL* nodo) const;
     int maximo(int a, int b) const;
 
-    // Rotaciones
+    // Rotaciones simples 
     NodoAVL* rotacionDerecha(NodoAVL* y);
     NodoAVL* rotacionIzquierda(NodoAVL* x);
 
-    // Insercion recursiva con balanceo
-    NodoAVL* insertarAux(NodoAVL* nodo, Paciente* paciente);
+    // Rotaciones dobles 
+    NodoAVL* rotacionIzquierdaDerecha(NodoAVL* nodo);
+    NodoAVL* rotacionDerechaIzquierda(NodoAVL* nodo);
 
-    // Eliminacion recursiva con balanceo
+    // Insercion y eliminacion recursiva
+    NodoAVL* insertarAux(NodoAVL* nodo, Paciente* paciente);
     NodoAVL* eliminarAux(NodoAVL* nodo, const std::string& id, bool& eliminado);
     NodoAVL* obtenerNodoConValorMinimo(NodoAVL* nodo) const;
 
@@ -48,6 +50,7 @@ public:
     Paciente* buscarPorId(const std::string& id, std::string& ruta) const;
     Paciente* buscarPorNombre(const std::string& nombre) const;
 
+    // Recorridos 
     void mostrarInorden() const;
     void mostrarPreorden() const;
     void mostrarPostorden() const;

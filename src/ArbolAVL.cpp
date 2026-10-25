@@ -34,6 +34,7 @@ int ArbolAVL::obtenerBalance(NodoAVL* nodo) const {
     return obtenerAltura(nodo->getIzquierdo()) - obtenerAltura(nodo->getDerecho());
 }
 
+// Rotación simple a la derecha
 NodoAVL* ArbolAVL::rotacionDerecha(NodoAVL* y) {
     NodoAVL* x = y->getIzquierdo();
     NodoAVL* T2 = x->getDerecho();
@@ -49,6 +50,7 @@ NodoAVL* ArbolAVL::rotacionDerecha(NodoAVL* y) {
     return x; // Nueva raiz del subarbol
 }
 
+// Rotación simple a la izquierda
 NodoAVL* ArbolAVL::rotacionIzquierda(NodoAVL* x) {
     NodoAVL* y = x->getDerecho();
     NodoAVL* T2 = y->getIzquierdo();
@@ -61,7 +63,19 @@ NodoAVL* ArbolAVL::rotacionIzquierda(NodoAVL* x) {
     x->setAltura(maximo(obtenerAltura(x->getIzquierdo()), obtenerAltura(x->getDerecho())) + 1);
     y->setAltura(maximo(obtenerAltura(y->getIzquierdo()), obtenerAltura(y->getDerecho())) + 1);
 
-    return y; // Nueva raiz del subarbol
+    return y;
+}
+
+// Rotación doble: Izquierda-Derecha (LR)
+NodoAVL* ArbolAVL::rotacionIzquierdaDerecha(NodoAVL* nodo) {
+    nodo->setIzquierdo(rotacionIzquierda(nodo->getIzquierdo()));
+    return rotacionDerecha(nodo);
+}
+
+// Rotación doble: Derecha-Izquierda (RL)
+NodoAVL* ArbolAVL::rotacionDerechaIzquierda(NodoAVL* nodo) {
+    nodo->setDerecho(rotacionDerecha(nodo->getDerecho()));
+    return rotacionIzquierda(nodo);
 }
 
 NodoAVL* ArbolAVL::insertarAux(NodoAVL* nodo, Paciente* paciente) {
@@ -83,26 +97,24 @@ NodoAVL* ArbolAVL::insertarAux(NodoAVL* nodo, Paciente* paciente) {
 
     int balance = obtenerBalance(nodo);
 
-    // Caso Izquierda - Izquierda
+    // Caso LL: Rotación Simple Derecha
     if (balance > 1 && paciente->getId() < nodo->getIzquierdo()->getPaciente()->getId()) {
         return rotacionDerecha(nodo);
     }
 
-    // Caso Derecha - Derecha
+    // Caso RR: Rotación Simple Izquierda
     if (balance < -1 && paciente->getId() > nodo->getDerecho()->getPaciente()->getId()) {
         return rotacionIzquierda(nodo);
     }
 
-    // Caso Izquierda - Derecha
+    // Caso LR: Rotación Doble Izquierda-Derecha
     if (balance > 1 && paciente->getId() > nodo->getIzquierdo()->getPaciente()->getId()) {
-        nodo->setIzquierdo(rotacionIzquierda(nodo->getIzquierdo()));
-        return rotacionDerecha(nodo);
+        return rotacionIzquierdaDerecha(nodo);
     }
 
-    // Caso Derecha - Izquierda
+    // Caso RL: Rotación Doble Derecha-Izquierda
     if (balance < -1 && paciente->getId() < nodo->getDerecho()->getPaciente()->getId()) {
-        nodo->setDerecho(rotacionDerecha(nodo->getDerecho()));
-        return rotacionIzquierda(nodo);
+        return rotacionDerechaIzquierda(nodo);
     }
 
     return nodo;
@@ -124,7 +136,7 @@ NodoAVL* ArbolAVL::obtenerNodoConValorMinimo(NodoAVL* nodo) const {
 
 NodoAVL* ArbolAVL::eliminarAux(NodoAVL* nodo, const std::string& id, bool& eliminado) {
     if (nodo == nullptr) {
-        return nodo;
+        return nullptr;
     }
 
     if (id < nodo->getPaciente()->getId()) {
@@ -135,65 +147,68 @@ NodoAVL* ArbolAVL::eliminarAux(NodoAVL* nodo, const std::string& id, bool& elimi
         // Encontramos el nodo a eliminar
         eliminado = true;
 
-        // Caso 1 o 2: un solo hijo o sin hijos
-        if (nodo->getIzquierdo() == nullptr || nodo->getDerecho() == nullptr) {
-            NodoAVL* temporal = nodo->getIzquierdo() ? nodo->getIzquierdo() : nodo->getDerecho();
-
-            if (temporal == nullptr) {
-                // Sin hijos
-                temporal = nodo;
-                nodo = nullptr;
-            } else {
-                // Un hijo: copiamos el contenido del hijo
-                *nodo = *temporal;
-            }
-
-            delete temporal->getPaciente();
-            delete temporal;
-        } else {
-            // Caso 3: con dos hijos. Obtenemos el sucesor inorden (el menor del subarbol derecho)
-            NodoAVL* temporal = obtenerNodoConValorMinimo(nodo->getDerecho());
-
-            // Liberamos el paciente actual y transferimos el puntero del sucesor
+        // Caso 1: Hoja (sin hijos)
+        if (nodo->getIzquierdo() == nullptr && nodo->getDerecho() == nullptr) {
             delete nodo->getPaciente();
-            nodo->setPaciente(temporal->getPaciente());
+            delete nodo;
+            return nullptr;
+        }
+        // Caso 2: Un solo hijo
+        else if (nodo->getIzquierdo() == nullptr) {
+            NodoAVL* hijo = nodo->getDerecho();
+            delete nodo->getPaciente();
+            delete nodo;
+            return hijo;
+        } else if (nodo->getDerecho() == nullptr) {
+            NodoAVL* hijo = nodo->getIzquierdo();
+            delete nodo->getPaciente();
+            delete nodo;
+            return hijo;
+        }
+        // Caso 3: Dos hijos
+        else {
+            // Obtenemos el menor del subarbol derecho (sucesor inorden)
+            NodoAVL* sucesor = obtenerNodoConValorMinimo(nodo->getDerecho());
 
-            // Evitamos que destruirArbol borre dos veces el mismo puntero al eliminar la hoja duplicada
+            // 1. Guardamos el ID del sucesor
+            std::string idSucesor = sucesor->getPaciente()->getId();
+
+            // 2. Liberamos el paciente que se elimina
+            delete nodo->getPaciente();
+
+            // 3. Clonamos el paciente del sucesor en el nodo actual
+            nodo->setPaciente(new Paciente(*sucesor->getPaciente()));
+
+            // 4. Eliminamos el nodo sucesor original de su posicion en el subarbol derecho
             bool dummy = false;
-            nodo->setDerecho(eliminarAux(nodo->getDerecho(), temporal->getPaciente()->getId(), dummy));
+            nodo->setDerecho(eliminarAux(nodo->getDerecho(), idSucesor, dummy));
         }
     }
 
-    if (nodo == nullptr) {
-        return nodo;
-    }
-
-    // Actualizar altura
+    // Actualizamos altura
     nodo->setAltura(1 + maximo(obtenerAltura(nodo->getIzquierdo()), obtenerAltura(nodo->getDerecho())));
 
-    // Rebalancear
+    // Rebalanceamos
     int balance = obtenerBalance(nodo);
 
-    // Caso Izquierda - Izquierda
+    // Caso LL
     if (balance > 1 && obtenerBalance(nodo->getIzquierdo()) >= 0) {
         return rotacionDerecha(nodo);
     }
 
-    // Caso Izquierda - Derecha
+    // Caso LR
     if (balance > 1 && obtenerBalance(nodo->getIzquierdo()) < 0) {
-        nodo->setIzquierdo(rotacionIzquierda(nodo->getIzquierdo()));
-        return rotacionDerecha(nodo);
+        return rotacionIzquierdaDerecha(nodo);
     }
 
-    // Caso Derecha - Derecha
+    // Caso RR
     if (balance < -1 && obtenerBalance(nodo->getDerecho()) <= 0) {
         return rotacionIzquierda(nodo);
     }
 
-    // Caso Derecha - Izquierda
+    // Caso RL
     if (balance < -1 && obtenerBalance(nodo->getDerecho()) > 0) {
-        nodo->setDerecho(rotacionDerecha(nodo->getDerecho()));
-        return rotacionIzquierda(nodo);
+        return rotacionDerechaIzquierda(nodo);
     }
 
     return nodo;

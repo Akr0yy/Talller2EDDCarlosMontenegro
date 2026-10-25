@@ -137,3 +137,15 @@ void Hospital::mostrarRecorridosArbolDecision() const {
     std::cout << "Postorden: ";
     arbolDecision.mostrarPostorden();
 }
+
+bool Hospital::darDeAltaPaciente(const std::string& id, std::string& departamento) {
+    NodoServicio* actual = inicio;
+    while (actual != nullptr) {
+        if (actual->dato->eliminarPacientePorId(id)) {
+            departamento = actual->dato->getNombre();
+            return true;
+        }
+        actual = actual->siguiente;
+    }
+    return false;
+}

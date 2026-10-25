@@ -28,8 +28,9 @@ void mostrarMenu() {
     std::cout << "2. Ver departamento" << std::endl;
     std::cout << "3. Revisar historial de atencion" << std::endl;
     std::cout << "4. Buscar paciente (ID o Nombre)" << std::endl;
-    std::cout << "5. Recorridos de Arbol de Decision" << std::endl;
-    std::cout << "6. Salir" << std::endl;
+    std::cout << "5. Dar de alta paciente (Eliminar del AVL)" << std::endl;
+    std::cout << "6. Recorridos de Arbol de Decision" << std::endl;
+    std::cout << "7. Salir" << std::endl;
     std::cout << "Seleccionar opcion: ";
 }
 
@@ -168,6 +169,19 @@ void buscarPaciente(ColaPacientes& cola, Hospital& hospital) {
     }
 }
 
+void darDeAltaPaciente(Hospital& hospital) {
+    std::cout << "Ingrese el ID del paciente a dar de alta: ";
+    std::string id;
+    std::cin >> id;
+
+    std::string depto;
+    if (hospital.darDeAltaPaciente(id, depto)) {
+        std::cout << "Paciente con ID " << id << " ha sido dado de alta exitosamente del servicio de " << depto << "." << std::endl;
+    } else {
+        std::cout << "No se encontro ningun paciente internado con ID " << id << "." << std::endl;
+    }
+}
+
 int main(int argc, char* argv[]) {
     std::string rutaArchivo = (argc > 1) ? argv[1] : "data/pacientes.txt";
 
@@ -203,9 +217,12 @@ int main(int argc, char* argv[]) {
                 buscarPaciente(cola, hospital);
                 break;
             case 5:
-                hospital.mostrarRecorridosArbolDecision();
+                darDeAltaPaciente(hospital);
                 break;
             case 6:
+                hospital.mostrarRecorridosArbolDecision();
+                break;
+            case 7:
                 std::cout << "Hasta luego :D." << std::endl;
                 salir = true;
                 break;
