@@ -42,7 +42,7 @@ void atenderPacientes(ColaPacientes& cola, Hospital& hospital, PilaHistorial& hi
     std::cout << "\n=== PACIENTES EN ESPERA ===" << std::endl;
     cola.mostrar();
 
-    std::cout << "Indique la cantidad de pacientes a atender: ";
+    std::cout << "\nIndique la cantidad de pacientes a atender: ";
     int cantidad;
     try {
         cantidad = leerEntero();
@@ -61,14 +61,13 @@ void atenderPacientes(ColaPacientes& cola, Hospital& hospital, PilaHistorial& hi
         Paciente* paciente = cola.desencolar();
 
         std::cout << "----------------------------------------" << std::endl;
-        std::cout << "Evaluando paciente:" << std::endl;
         paciente->mostrarInfoClinica();
 
         std::string rutaDecision;
         try {
             std::string servicioAsignado = hospital.procesarYDerivarPaciente(paciente, rutaDecision);
 
-            std::cout << "\nRuta de evaluacion: " << rutaDecision << std::endl;
+            std::cout << "Ruta de evaluacion: " << rutaDecision << std::endl;
             std::cout << "Servicio asignado: " << servicioAsignado << std::endl;
 
             historial.agregarAtencion(new RegistroAtencion(
@@ -78,6 +77,7 @@ void atenderPacientes(ColaPacientes& cola, Hospital& hospital, PilaHistorial& hi
             std::cout << "No se pudo derivar al paciente: " << mensaje << std::endl;
             delete paciente;
         }
+        std::cout << std::endl;
     }
 }
 
@@ -112,17 +112,17 @@ void revisarHistorial(PilaHistorial& historial) {
 void buscarPaciente(ColaPacientes& cola, Hospital& hospital) {
     std::cout << "\n1. Buscar por ID" << std::endl;
     std::cout << "2. Buscar por Nombre" << std::endl;
-    std::cout << "Seleccione modalidad: ";
+    std::cout << "Seleccionar opcion: ";
     
-    int tipoBusqueda;
+    int subOpcion;
     try {
-        tipoBusqueda = leerEntero();
-    } catch (const std::string& mensaje) {
-        std::cout << mensaje << std::endl;
+        subOpcion = leerEntero();
+    } catch (const std::string& err) {
+        std::cout << err << std::endl;
         return;
     }
 
-    if (tipoBusqueda == 1) {
+    if (subOpcion == 1) {
         std::cout << "Ingrese el ID del paciente a buscar: ";
         std::string id;
         std::cin >> id;
@@ -130,35 +130,35 @@ void buscarPaciente(ColaPacientes& cola, Hospital& hospital) {
         Paciente* enCola = cola.buscarPorId(id);
         if (enCola != nullptr) {
             std::cout << "\n=== PACIENTE ENCONTRADO (en espera) ===" << std::endl;
-            enCola->mostrarInfo();
+            enCola->mostrarInfoClinica();
             return;
         }
 
-        std::string departamento;
-        std::string ruta;
-        Paciente* enServicio = hospital.buscarPacientePorId(id, departamento, ruta);
+        std::string depto = "";
+        std::string ruta = "";
+        Paciente* enServicio = hospital.buscarPacientePorId(id, depto, ruta);
         if (enServicio != nullptr) {
             std::cout << "\n=== PACIENTE ENCONTRADO ===" << std::endl;
-            std::cout << "Departamento: " << departamento << std::endl;
-            enServicio->mostrarInfo();
-            std::cout << "Ruta de busqueda AVL: " << ruta << std::endl;
+            std::cout << "Departamento: " << depto << std::endl;
+            enServicio->mostrarInfoClinica();
+            std::cout << "Ruta de busqueda: " << ruta << std::endl;
             return;
         }
 
         std::cout << "No se encontro ningun paciente con ID " << id << "." << std::endl;
 
-    } else if (tipoBusqueda == 2) {
+    } else if (subOpcion == 2) {
         std::cout << "Ingrese el nombre del paciente a buscar: ";
         std::string nombre;
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::getline(std::cin, nombre);
 
-        std::string departamento;
-        Paciente* enServicio = hospital.buscarPacientePorNombre(nombre, departamento);
+        std::string depto = "";
+        Paciente* enServicio = hospital.buscarPacientePorNombre(nombre, depto);
         if (enServicio != nullptr) {
             std::cout << "\n=== PACIENTE ENCONTRADO ===" << std::endl;
-            std::cout << "Departamento: " << departamento << std::endl;
-            enServicio->mostrarInfo();
+            std::cout << "Departamento: " << depto << std::endl;
+            enServicio->mostrarInfoClinica();
             return;
         }
 

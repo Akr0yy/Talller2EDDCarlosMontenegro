@@ -216,7 +216,7 @@ Paciente* ArbolAVL::buscarPorIdAux(NodoAVL* nodo, const std::string& id, std::st
         ruta += " -> " + nodo->getPaciente()->getId();
     }
 
-    if (id == nodo->getPaciente()->getId()) {
+    if (nodo->getPaciente()->getId() == id) {
         return nodo->getPaciente();
     }
 
